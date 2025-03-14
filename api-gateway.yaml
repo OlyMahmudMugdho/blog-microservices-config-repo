@@ -11,12 +11,22 @@ spring:
             - Path=/api/posts/**
           filters:
             - RewritePath=/api/posts/(?<segment>.*), /api/posts/$\{segment}
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 10  # Rate at which tokens replenish (requests per second)
+                redis-rate-limiter.burstCapacity: 20  # Max requests allowed in a burst
+                key-resolver: "#{@apiKeyResolver}"  # Custom key resolver bean
         - id: comment-service
           uri: lb://comment-service
           predicates:
             - Path=/api/comments/**
           filters:
             - RewritePath=/api/comments/(?<segment>.*), /api/comments/$\{segment}
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 5   # Lower rate for comments
+                redis-rate-limiter.burstCapacity: 10
+                key-resolver: "#{@apiKeyResolver}"
 
 management:
   health:
