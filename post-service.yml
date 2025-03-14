@@ -8,6 +8,12 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/blog_db
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/blog-microservices
+          jwk-set-uri: http://localhost:8080/realms/blog-microservices/protocol/openid-connect/certs
 
   cloud:
     openfeign:
